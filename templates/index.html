@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>India-Vietnam Map</title>
+    <style>
+      body, html {
+        margin: 0; padding: 0; height: 100%;
+        display: flex;
+        flex-direction: column;
+        font-family: Arial, sans-serif;
+      }
+      h1 {
+        text-align: center;
+        margin: 10px 0;
+      }
+      #map-frame {
+        flex: 0 0 600px; /* fixed height */
+        width: 100%;
+        border: none;
+      }
+      #suggestion-section {
+        flex: 1 1 auto;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 10px;
+        gap: 10px;
+        box-sizing: border-box;
+      }
+      .suggestion-box {
+        flex: 1 1 calc(50% - 20px); /* 2 columns with gap */
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #ccc;
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 4px;
+        min-height: 180px;
+      }
+      .suggestion-box h3 {
+        margin: 0 0 5px 0;
+      }
+      textarea {
+        flex: 1 1 auto;
+        resize: none;
+        padding: 5px;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+      button {
+        align-self: flex-end;
+        padding: 6px 12px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      #names-bar {
+        flex: 0 0 60px;
+        display: flex;
+        border-top: 1px solid #ccc;
+        background: #f5f5f5;
+        align-items: center;
+        justify-content: space-around;
+        font-weight: bold;
+      }
+      #names-bar div {
+        cursor: pointer;
+        padding: 8px 16px;
+        border-radius: 4px;
+        user-select: none;
+      }
+      #names-bar div:hover, #names-bar div.active {
+        background-color: #007bff;
+        color: white;
+      }
+      #comments-display {
+        flex: 0 0 150px;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+        overflow-y: auto;
+        background: #fafafa;
+        font-size: 14px;
+      }
+      #comments-display h4 {
+        margin-top: 0;
+      }
+      #comments-display div.comment {
+        padding: 6px 8px;
+        border-bottom: 1px solid #ddd;
+      }
+      #comments-display div.comment:last-child {
+        border-bottom: none;
+      }
+      #comments-display .timestamp {
+        color: #666;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+    </style>
+</head>
+<body>
+    <h1>India to Vietnam Map</h1>
+
+    <iframe id="map-frame" src="{{ url_for('static', filename='map.html') }}"></iframe>
+
+    <div id="suggestion-section">
+        <!-- 4 boxes in 2 by 2 grid -->
+        <div class="suggestion-box" data-name="Name1">
+          <h3>Name1</h3>
+          <textarea placeholder="Enter suggestion..."></textarea>
+          <button onclick="submitSuggestion(this)">Submit</button>
+        </div>
+        <div class="suggestion-box" data-name="Name2">
+          <h3>Name2</h3>
+          <textarea placeholder="Enter suggestion..."></textarea>
+          <button onclick="submitSuggestion(this)">Submit</button>
+        </div>
+        <div class="suggestion-box" data-name="Name3">
+          <h3>Name3</h3>
+          <textarea placeholder="Enter suggestion..."></textarea>
+          <button onclick="submitSuggestion(this)">Submit</button>
+        </div>
+        <div class="suggestion-box" data-name="Name4">
+          <h3>Name4</h3>
+          <textarea placeholder="Enter suggestion..."></textarea>
+          <button onclick="submitSuggestion(this)">Submit</button>
+        </div>
+    </div>
+
+    <div id="names-bar">
+      <div data-name="Name1" onclick="showComments(this)">Name1</div>
+      <div data-name="Name2" onclick="showComments(this)">Name2</div>
+      <div data-name="Name3" onclick="showComments(this)">Name3</div>
+      <div data-name="Name4" onclick="showComments(this)">Name4</div>
+    </div>
+
+    <div id="comments-display">
+      <h4>Comments for <span id="comments-for">[Select a name]</span></h4>
+      <div id="comments-list">No comments to display.</div>
+    </div>
+
+<script>
+  async function submitSuggestion(button) {
+    const box = button.closest('.suggestion-box');
+    const name = box.getAttribute('data-name');
+    const textarea = box.querySelector('textarea');
+    const suggestion = textarea.value.trim();
+    if (!suggestion) {
+      alert('Please enter a suggestion');
+      return;
+    }
+    try {
+      const response = await fetch('/submit_suggestion', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name: name, suggestion: suggestion})
+      });
+      if (response.ok) {
+        alert('Suggestion submitted!');
+        textarea.value = '';
+        // If currently showing this name's comments, refresh comments
+        const activeNameDiv = document.querySelector('#names-bar div.active');
+        if (activeNameDiv && activeNameDiv.getAttribute('data-name') === name) {
+          loadComments(name);
+        }
+      } else {
+        alert('Failed to submit suggestion');
+      }
+    } catch(e) {
+      alert('Error submitting suggestion');
+      console.error(e);
+    }
+  }
+
+  async function loadComments(name) {
+    const commentsList = document.getElementById('comments-list');
+    const commentsFor = document.getElementById('comments-for');
+    commentsFor.textContent = name;
+
+    try {
+      const response = await fetch(`/get_suggestions?name=${encodeURIComponent(name)}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.suggestions.length === 0) {
+          commentsList.innerHTML = 'No comments to display.';
+          return;
+        }
+        commentsList.innerHTML = data.suggestions.map(s => `
+          <div class="comment">
+            <div>${s.text}</div>
+            <div class="timestamp">${s.time}</div>
+          </div>
+        `).join('');
+      } else {
+        commentsList.innerHTML = 'Failed to load comments.';
+      }
+    } catch (e) {
+      commentsList.innerHTML = 'Error loading comments.';
+      console.error(e);
+    }
+  }
+
+  function showComments(nameDiv) {
+    // Remove active from all names
+    document.querySelectorAll('#names-bar div').forEach(div => div.classList.remove('active'));
+    // Add active to clicked
+    nameDiv.classList.add('active');
+    const name = nameDiv.getAttribute('data-name');
+    loadComments(name);
+  }
+
+</script>
+
+</body>
+</html>
