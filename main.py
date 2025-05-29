@@ -28,7 +28,9 @@ if __name__ == "__main__":
     app.run(debug=True)'''
 
 
+
 import os
+from flask import Flask, render_template
 
 try:
     from app import create_app
@@ -46,15 +48,14 @@ else:
     if create_app:
         app = create_app()
     else:
-        from flask import Flask, render_template
         app = Flask(__name__)
 
         @app.route('/')
         def home():
             return render_template('index.html')
 
-# Gunicorn will now be able to see this app variable
 
-'''if __name__ == "__main__":
+# Optional: Only needed if running locally with python main.py
+if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)'''
+    app.run(host="0.0.0.0", port=port, debug=True)
