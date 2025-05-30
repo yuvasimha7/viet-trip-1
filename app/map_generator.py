@@ -38,7 +38,7 @@ center_lat = sum(lat for lat, _ in all_coords) / len(all_coords)
 center_lon = sum(lon for _, lon in all_coords) / len(all_coords)
 
 # Create the map
-m = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles='CartoDB positron')
+m = folium.Map(location=[center_lat, center_lon], zoom_start=4, tiles='CartoDB positron')
 
 # Add green 25 km circles with reduced opacity for layering clarity
 for city, coords in cities.items():

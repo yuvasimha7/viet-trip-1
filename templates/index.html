@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>India-Vietnam Map</title>
+    <title>Thailand-Vietnam Trip</title>
     <style>
       body, html {
         margin: 0; padding: 0; height: 100%;
@@ -99,39 +99,39 @@
     </style>
 </head>
 <body>
-    <h1>India to Vietnam Map</h1>
+    <h1>Thailand-Vietnam</h1>
 
     <iframe id="map-frame" src="{{ url_for('static', filename='map.html') }}"></iframe>
 
     <div id="suggestion-section">
         <!-- 4 boxes in 2 by 2 grid -->
-        <div class="suggestion-box" data-name="Name1">
-          <h3>Name1</h3>
+        <div class="suggestion-box" data-name="Yuva">
+          <h3>Yuva</h3>
           <textarea placeholder="Enter suggestion..."></textarea>
           <button onclick="submitSuggestion(this)">Submit</button>
         </div>
-        <div class="suggestion-box" data-name="Name2">
-          <h3>Name2</h3>
+        <div class="suggestion-box" data-name="Pavan">
+          <h3>Pavan</h3>
           <textarea placeholder="Enter suggestion..."></textarea>
           <button onclick="submitSuggestion(this)">Submit</button>
         </div>
-        <div class="suggestion-box" data-name="Name3">
-          <h3>Name3</h3>
+        <div class="suggestion-box" data-name="Naresh">
+          <h3>Naresh</h3>
           <textarea placeholder="Enter suggestion..."></textarea>
           <button onclick="submitSuggestion(this)">Submit</button>
         </div>
-        <div class="suggestion-box" data-name="Name4">
-          <h3>Name4</h3>
+        <div class="suggestion-box" data-name="Manmohan">
+          <h3>Manmohan</h3>
           <textarea placeholder="Enter suggestion..."></textarea>
           <button onclick="submitSuggestion(this)">Submit</button>
         </div>
     </div>
 
     <div id="names-bar">
-      <div data-name="Name1" onclick="showComments(this)">Name1</div>
-      <div data-name="Name2" onclick="showComments(this)">Name2</div>
-      <div data-name="Name3" onclick="showComments(this)">Name3</div>
-      <div data-name="Name4" onclick="showComments(this)">Name4</div>
+      <div data-name="Yuva" onclick="showComments(this)">Yuva</div>
+      <div data-name="Pavan" onclick="showComments(this)">Pavan</div>
+      <div data-name="Naresh" onclick="showComments(this)">Naresh</div>
+      <div data-name="Manmohan" onclick="showComments(this)">Manmohan</div>
     </div>
 
     <div id="comments-display">
@@ -187,8 +187,8 @@
         }
         commentsList.innerHTML = data.suggestions.map(s => `
           <div class="comment">
-            <div>${s.text}</div>
-            <div class="timestamp">${s.time}</div>
+            <div>${s.comment}</div>
+            <div class="timestamp">${s.timestamp}</div>
           </div>
         `).join('');
       } else {
@@ -208,7 +208,6 @@
     const name = nameDiv.getAttribute('data-name');
     loadComments(name);
   }
-
 </script>
 
 </body>

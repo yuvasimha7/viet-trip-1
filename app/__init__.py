@@ -1,19 +1,30 @@
+import os
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+
 from .routes import bp
 from .map_generator import generate_map
-from .suggestions import suggestions_bp  # Import new blueprint
-import os
+from .suggestions import suggestions_bp  # Import suggestions blueprint
+
+# Initialize the SQLAlchemy object globally so it can be imported elsewhere
+db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__, template_folder=os.path.abspath("templates"))
 
-    # Register existing blueprint (routes)
-    app.register_blueprint(bp)
+    # PostgreSQL configuration from environment variable (Railway will provide DATABASE_URL)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Register new suggestions blueprint (comments API)
+    # Initialize the DB with app
+    db.init_app(app)
+
+    # Register the route blueprints
+    app.register_blueprint(bp)
     app.register_blueprint(suggestions_bp)
 
-    # Ensure static folder exists and generate the map.html if needed
+    # Ensure 'static/' exists and generate map
     os.makedirs("static", exist_ok=True)
     generate_map(os.path.join("static", "map.html"))
 

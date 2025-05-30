@@ -3,12 +3,12 @@ from datetime import datetime
 
 suggestions_bp = Blueprint('suggestions', __name__)
 
-# In-memory store for quick test, replace with DB for production
+# Updated in-memory store with your category names
 comments_store = {
-    "Name1": [],
-    "Name2": [],
-    "Name3": [],
-    "Name4": []
+    "Yuva": [],
+    "Manmohan": [],
+    "Sai Pavan": [],
+    "Naresh": []
 }
 
 @suggestions_bp.route('/submit_suggestion', methods=['POST'])
