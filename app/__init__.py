@@ -1,14 +1,17 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
+from .extensions import db
+from flask_migrate import Migrate
 
 from .routes import bp
 from .map_generator import generate_map
 from .suggestions import suggestions_bp  # Import suggestions blueprint
 
 # Initialize the SQLAlchemy object globally so it can be imported elsewhere
-db = SQLAlchemy()
+#db = SQLAlchemy()
+
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__, template_folder=os.path.abspath("templates"))
@@ -19,6 +22,7 @@ def create_app():
 
     # Initialize the DB with app
     db.init_app(app)
+    migrate.init_app(app,db)
 
     # Register the route blueprints
     app.register_blueprint(bp)
