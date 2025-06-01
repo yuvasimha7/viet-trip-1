@@ -5,7 +5,7 @@ from .extensions import db
 from flask_migrate import Migrate
 
 from .routes import bp
-from .map_generator import generate_map
+#from .map_generator import generate_map
 from .suggestions import suggestions_bp  # Import suggestions blueprint
 
 # Initialize the SQLAlchemy object globally so it can be imported elsewhere
@@ -30,6 +30,6 @@ def create_app():
 
     # Ensure 'static/' exists and generate map
     os.makedirs("static", exist_ok=True)
-    generate_map(os.path.join("static", "map.html"))
+    #generate_map(os.path.join("static", "map.html"))
 
     return app
