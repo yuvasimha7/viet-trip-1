@@ -5,11 +5,7 @@ from .extensions import db
 from flask_migrate import Migrate
 
 from .routes import bp
-#from .map_generator import generate_map
 from .suggestions import suggestions_bp  # Import suggestions blueprint
-
-# Initialize the SQLAlchemy object globally so it can be imported elsewhere
-#db = SQLAlchemy()
 
 migrate = Migrate()
 
@@ -22,14 +18,16 @@ def create_app():
 
     # Initialize the DB with app
     db.init_app(app)
-    migrate.init_app(app,db)
+    migrate.init_app(app, db)
 
     # Register the route blueprints
     app.register_blueprint(bp)
     app.register_blueprint(suggestions_bp)
 
-    # Ensure 'static/' exists and generate map
-    os.makedirs("static", exist_ok=True)
-    #generate_map(os.path.join("static", "map.html"))
+    # Ensure static directory exists (but don't generate map here)
+    with app.app_context():
+        static_dir = os.path.join(app.root_path, 'static')
+        os.makedirs(static_dir, exist_ok=True)
+        print(f"Static directory ensured at: {static_dir}")
 
     return app

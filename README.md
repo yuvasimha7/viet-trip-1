@@ -15,3 +15,9 @@
 - added postgresql database to take in comments and show the comments. 
 - Have to check if map is being showed or not. if not showing remove generate map function
 - future plan - make map shorter and add extra box with expandable in width and add connection with map and lot of other tools or features
+---
+
+# ver 1.0.3
+- release date 2025-06-01
+- fixed the issues of map and comments at same time by fixing map generate function on init and making route.py as sole file to generate map
+- future fixes - make index.html modular structure so more features can be added.
