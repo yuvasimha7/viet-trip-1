@@ -1,0 +1,112 @@
+<script>
+  let isMapExpanded = false;
+
+  async function loadTabContent() {
+    const tabs = ['about', 'search', 'bookings'];
+    for (const tab of tabs) {
+      try {
+        const response = await fetch(`/static/content/${tab}.html`);
+        if (response.ok) {
+          const content = await response.text();
+          document.getElementById(`${tab}-content`).innerHTML = content;
+        } else {
+          document.getElementById(`${tab}-content`).innerHTML = `<p>Failed to load ${tab} content.</p>`;
+        }
+      } catch (error) {
+        document.getElementById(`${tab}-content`).innerHTML = `<p>Error loading ${tab} content.</p>`;
+        console.error(`Error loading ${tab} content:`, error);
+      }
+    }
+  }
+
+  function showTab(tabName) {
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+    document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+    document.getElementById(`${tabName}-tab`).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function toggleMapExpansion() {
+    const mapContainer = document.getElementById('map-container');
+    const leftPanel = document.getElementById('left-panel');
+    const expandBtn = document.getElementById('expand-btn');
+    if (isMapExpanded) {
+      mapContainer.classList.remove('expanded');
+      leftPanel.classList.remove('hidden');
+      expandBtn.textContent = 'Expand Map';
+    } else {
+      mapContainer.classList.add('expanded');
+      leftPanel.classList.add('hidden');
+      expandBtn.textContent = 'Collapse Map';
+    }
+    isMapExpanded = !isMapExpanded;
+  }
+
+  async function submitSuggestion(button) {
+    const box = button.closest('.suggestion-box');
+    const name = box.getAttribute('data-name');
+    const textarea = box.querySelector('textarea');
+    const suggestion = textarea.value.trim();
+    if (!suggestion) {
+      alert('Please enter a suggestion');
+      return;
+    }
+    try {
+      const response = await fetch('/submit_suggestion', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name: name, suggestion: suggestion})
+      });
+      if (response.ok) {
+        alert('Suggestion submitted!');
+        textarea.value = '';
+        const activeNameDiv = document.querySelector('#names-bar div.active');
+        if (activeNameDiv && activeNameDiv.getAttribute('data-name') === name) {
+          loadComments(name);
+        }
+      } else {
+        alert('Failed to submit suggestion');
+      }
+    } catch (e) {
+      alert('Error submitting suggestion');
+      console.error(e);
+    }
+  }
+
+  async function loadComments(name) {
+    const commentsList = document.getElementById('comments-list');
+    const commentsFor = document.getElementById('comments-for');
+    commentsFor.textContent = name;
+
+    try {
+      const response = await fetch(`/get_suggestions?name=${encodeURIComponent(name)}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.suggestions.length === 0) {
+          commentsList.innerHTML = 'No comments to display.';
+          return;
+        }
+        commentsList.innerHTML = data.suggestions.map(s => `
+          <div class="comment">
+            <div>${s.comment}</div>
+            <div class="timestamp">${s.timestamp}</div>
+          </div>
+        `).join('');
+      } else {
+        commentsList.innerHTML = 'Failed to load comments.';
+      }
+    } catch (e) {
+      commentsList.innerHTML = 'Error loading comments.';
+      console.error(e);
+    }
+  }
+
+  function showComments(nameDiv) {
+    document.querySelectorAll('#names-bar div').forEach(div => div.classList.remove('active'));
+    nameDiv.classList.add('active');
+    const name = nameDiv.getAttribute('data-name');
+    loadComments(name);
+  }
+
+  document.addEventListener('DOMContentLoaded', loadTabContent);
+</script>

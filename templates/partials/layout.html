@@ -1,0 +1,52 @@
+<body>
+  <h1>MAYUNASA - Nov'25</h1>
+
+  <div id="main-content">
+    <div id="left-panel">
+      <div id="tab-nav">
+        <button class="tab-button active" onclick="showTab('about')">About</button>
+        <button class="tab-button" onclick="showTab('search')">Search</button>
+        <button class="tab-button" onclick="showTab('bookings')">Bookings</button>
+      </div>
+      <div id="tab-content">
+        <div id="about-tab" class="tab-pane active">
+          <div id="about-content">Loading...</div>
+        </div>
+        <div id="search-tab" class="tab-pane">
+          <div id="search-content">Loading...</div>
+        </div>
+        <div id="bookings-tab" class="tab-pane">
+          <div id="bookings-content">Loading...</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="map-container">
+      <div id="map-controls">
+        <span>Trip Map</span>
+        <button id="expand-btn" onclick="toggleMapExpansion()">Expand Map</button>
+      </div>
+      <iframe id="map-frame" src="{{ url_for('static', filename='map.html') }}"></iframe>
+    </div>
+  </div>
+
+  <div id="suggestion-section">
+    {% for name in ['Yuva', 'Pavan', 'Naresh', 'Manmohan'] %}
+    <div class="suggestion-box" data-name="{{ name }}">
+      <h3>{{ name }}</h3>
+      <textarea placeholder="Enter suggestion..."></textarea>
+      <button onclick="submitSuggestion(this)">Submit</button>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div id="names-bar">
+    {% for name in ['Yuva', 'Pavan', 'Naresh', 'Manmohan'] %}
+    <div data-name="{{ name }}" onclick="showComments(this)">{{ name }}</div>
+    {% endfor %}
+  </div>
+
+  <div id="comments-display">
+    <h4>Comments for <span id="comments-for">[Select a name]</span></h4>
+    <div id="comments-list">No comments to display.</div>
+  </div>

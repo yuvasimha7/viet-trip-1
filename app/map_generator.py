@@ -18,6 +18,26 @@ def generate_map(output_path):
     def midpoint(coord1, coord2):
         return [(coord1[0] + coord2[0]) / 2, (coord1[1] + coord2[1]) / 2]
 
+    # Add road route waypoints for more realistic routing
+    def add_road_route(map_obj, start_coords, end_coords, waypoints=None, color='blue', weight=4, opacity=0.7, dash_array=None):
+        """Add a road route line with optional waypoints"""
+        if waypoints:
+            route_coords = [start_coords] + waypoints + [end_coords]
+        else:
+            route_coords = [start_coords, end_coords]
+        
+        folium.PolyLine(
+            locations=route_coords,
+            color=color,
+            weight=weight,
+            opacity=opacity,
+            dash_array=dash_array,
+            popup=f"Road Route"
+        ).add_to(map_obj)
+        
+        
+
+
     cities = {
         "Mumbai": [19.0760, 72.8777],
         "Hyderabad": [17.3850, 78.4867],
@@ -29,6 +49,12 @@ def generate_map(output_path):
         "Sa Pa": [22.3371, 103.8448],
         "La Hang": [20.8609, 106.8190],
         "Ninh Binh": [20.2470, 105.9836]
+    }
+
+    # Add specific locations for better routing
+    specific_locations = {
+        "Suvarnabhumi Airport": [13.6900, 100.7501],  # BKK Airport
+        "Pattaya Train Station": [12.9300, 100.8850]   # Approximate location
     }
 
     # Sublocation data
@@ -63,7 +89,7 @@ def generate_map(output_path):
 
     port_blair_coords = [11.6234 + 1.35, 92.7265]
 
-    all_coords = list(cities.values()) + [port_blair_coords]
+    all_coords = list(cities.values()) + [port_blair_coords] + list(specific_locations.values())
     center_lat = sum(lat for lat, _ in all_coords) / len(all_coords)
     center_lon = sum(lon for _, lon in all_coords) / len(all_coords)
 
@@ -124,6 +150,18 @@ def generate_map(output_path):
                 popup=city
             ).add_to(m)
 
+    # Add markers for specific locations
+    '''for location_name, coords in specific_locations.items():
+        icon_color = 'red' if 'Airport' in location_name else 'blue' if 'Bus' in location_name else 'orange'
+        icon_name = 'plane' if 'Airport' in location_name else 'bus' if 'Bus' in location_name else 'train'
+        
+        folium.Marker(
+            location=coords,
+            popup=location_name,
+            tooltip=location_name,
+            icon=folium.Icon(color=icon_color, icon=icon_name, prefix='fa')
+        ).add_to(m)'''
+
     # Add sublocation circles (1km radius, violet color)
     for location_group, places in sublocations.items():
         for place_name, coords in places.items():
@@ -141,19 +179,36 @@ def generate_map(output_path):
                 tooltip=display_name
             ).add_to(m)
 
-    # Add Font Awesome for flight icons
+    # Add Font Awesome for icons
     font_awesome_css = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">'
     m.get_root().html.add_child(folium.Element(font_awesome_css))
     
     rotated_marker_js = 'https://rawcdn.githack.com/bbecquet/Leaflet.RotatedMarker/master/leaflet.rotatedMarker.js'
     m.get_root().html.add_child(folium.Element(f'<script src="{rotated_marker_js}"></script>'))
 
-    def add_rotated_marker(map_obj, coord1, coord2):
+    def add_rotated_marker(map_obj, coord1, coord2, icon_type="plane"):
         mid = midpoint(coord1, coord2)
         bearing = compute_bearing(coord1, coord2)
         adjusted_bearing = (bearing - 90) % 360
         
-        # Create pure black plane icon using DivIcon for better control
+        # Create icon based on type
+        if icon_type == "plane":
+            icon_class = "fa-plane"
+            color = "black"
+        elif icon_type == "car":
+            icon_class = "fa-car"
+            color = "black"
+        elif icon_type == "bus":
+            icon_class = "fa-bus"
+            color = "blue"
+        elif icon_type == "train":
+            icon_class = "fa-train"
+            color = "orange"
+        else:
+            icon_class = "fa-plane"
+            color = "black"
+        
+        # Create rotated icon
         plane_html = f'''
         <div style="
             width: 20px; 
@@ -164,9 +219,9 @@ def generate_map(output_path):
             transform: rotate({adjusted_bearing}deg);
             transform-origin: center center;
         ">
-            <i class="fa fa-plane" style="
+            <i class="fa {icon_class}" style="
                 font-size: 16px; 
-                color: black;
+                color: {color};
             "></i>
         </div>
         '''
@@ -183,6 +238,7 @@ def generate_map(output_path):
         )
         map_obj.add_child(marker)
 
+    # Original flight routes
     source_cities = ["Mumbai", "Hyderabad", "Kolkata", "Chennai"]
     for city in source_cities:
         source = cities[city]
@@ -193,7 +249,7 @@ def generate_map(output_path):
             opacity=0.4,
             dash_array='10, 10'
         ).add_to(m)
-        add_rotated_marker(m, source, port_blair_coords)
+        add_rotated_marker(m, source, port_blair_coords, "plane")
 
     folium.PolyLine(
         locations=[port_blair_coords, cities["Bangkok"]],
@@ -201,7 +257,7 @@ def generate_map(output_path):
         weight=3,
         opacity=0.4
     ).add_to(m)
-    add_rotated_marker(m, port_blair_coords, cities["Bangkok"])
+    add_rotated_marker(m, port_blair_coords, cities["Bangkok"], "plane")
 
     folium.PolyLine(
         locations=[cities["Bangkok"], cities["Hanoi"]],
@@ -209,7 +265,43 @@ def generate_map(output_path):
         weight=3,
         opacity=0.4
     ).add_to(m)
-    add_rotated_marker(m, cities["Bangkok"], cities["Hanoi"])
+    add_rotated_marker(m, cities["Bangkok"], cities["Hanoi"], "plane")
+
+    # NEW: Add road route from Suvarnabhumi Airport to Pattaya Train Station
+    # Please provide your coordinates - using placeholder coordinates for now
+    road_waypoints = [
+        [13.7313, 100.8051],  # Replace with your coordinates
+        [13.7342, 100.8056],  # Replace with your coordinates  
+        [13.6728, 100.8394],   # Replace with your coordinates
+        [13.5930,100.9638],
+        [13.4955,101.0464],
+        [13.3922,101.0464],
+        [13.2987,100.9945],
+        [13.2576,100.9903],
+        [13.2145,101.0056],
+        [13.1523,100.9866],
+        [13.0038,100.9934],
+        [12.9592,100.9739],
+        [12.9447,100.9047],
+        [12.9183,100.8969]
+    ]
+    
+    add_road_route(
+        m, 
+        specific_locations["Suvarnabhumi Airport"], 
+        specific_locations["Pattaya Train Station"],
+        waypoints=road_waypoints,
+        color='blue',
+        weight=4,
+        opacity=0.8
+    )
+    
+    # Add black car symbol on the road route
+    #car_position = midpoint(specific_locations["Suvarnabhumi Airport"], specific_locations["Pattaya Train Station"])
+    #add_rotated_marker(m, specific_locations["Suvarnabhumi Airport"], specific_locations["Pattaya Train Station"], "car")
+
+    
+    #m.get_root().html.add_child(folium.Element(legend_html))
 
     m.save(output_path)
 

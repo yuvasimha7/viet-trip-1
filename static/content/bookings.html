@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Booking Manager</title>
+</head>
+<body>
+    <div class="bookings-section">
+        <h2>📅 Bookings & Reservations</h2>
+        <p>Manage your travel bookings, accommodations, and activities all in one place.</p>
+        
+        <div style="display: grid; gap: 20px; margin: 20px 0;">
+            
+            <!-- Flight Bookings -->
+            <div class="booking-card">
+                <div class="booking-header">
+                    <h3>✈️ Flight Bookings</h3>
+                    <span class="status confirmed">Confirmed</span>
+                </div>
+                <div class="booking-details">
+                    <div class="flight-info">
+                        <strong>Outbound:</strong> Delhi → Bangkok<br>
+                        <small>March 15, 2024 | 6:30 AM - 2:15 PM</small>
+                    </div>
+                    <div class="flight-info">
+                        <strong>Return:</strong> Ho Chi Minh → Delhi<br>
+                        <small>March 29, 2024 | 11:45 PM - 6:30 AM+1</small>
+                    </div>
+                </div>
+                <button class="action-btn">View Details</button>
+            </div>
+            
+            <!-- Accommodation -->
+            <div class="booking-card">
+                <div class="booking-header">
+                    <h3>🏨 Accommodations</h3>
+                    <span class="status pending">Pending</span>
+                </div>
+                <div class="booking-details">
+                    <div class="hotel-list">
+                        <div class="hotel-item">
+                            <strong>Bangkok:</strong> Sukhumvit Hotel<br>
+                            <small>March 15-18 | 3 nights | 2 rooms</small>
+                        </div>
+                        <div class="hotel-item">
+                            <strong>Phuket:</strong> Beach Resort<br>
+                            <small>March 18-22 | 4 nights | 2 rooms</small>
+                        </div>
+                        <div class="hotel-item">
+                            <strong>Ho Chi Minh:</strong> City Center Hotel<br>
+                            <small>March 22-26 | 4 nights | 2 rooms</small>
+                        </div>
+                        <div class="hotel-item">
+                            <strong>Hanoi:</strong> Old Quarter Boutique<br>
+                            <small>March 26-29 | 3 nights | 2 rooms</small>
+                        </div>
+                    </div>
+                </div>
+                <button class="action-btn">Manage Bookings</button>
+            </div>
+            
+            <!-- Activities & Tours -->
+            <div class="booking-card">
+                <div class="booking-header">
+                    <h3>🎯 Activities & Tours</h3>
+                    <span class="status partial">2/5 Booked</span>
+                </div>
+                <div class="booking-details">
+                    <div class="activity-list">
+                        <div class="activity-item confirmed">
+                            ✅ <strong>Phi Phi Island Day Trip</strong><br>
+                            <small>March 20 | 8:00 AM - 6:00 PM</small>
+                        </div>
+                        <div class="activity-item confirmed">
+                            ✅ <strong>Ha Long Bay Overnight Cruise</strong><br>
+                            <small>March 27-28 | 2D/1N</small>
+                        </div>
+                        <div class="activity-item pending">
+                            ⏳ <strong>Bangkok Temple Tour</strong><br>
+                            <small>March 16 | Half Day</small>
+                        </div>
+                        <div class="activity-item pending">
+                            ⏳ <strong>Vietnamese Cooking Class</strong><br>
+                            <small>March 24 | 3 hours</small>
+                        </div>
+                        <div class="activity-item pending">
+                            ⏳ <strong>Mekong Delta Tour</strong><br>
+                            <small>March 25 | Full Day</small>
+                        </div>
+                    </div>
+                </div>
+                <button class="action-btn">Book More Activities</button>
+            </div>
+            
+            <!-- Transportation -->
+            <div class="booking-card">
+                <div class="booking-header">
+                    <h3>🚗 Transportation</h3>
+                    <span class="status confirmed">Confirmed</span>
+                </div>
+                <div class="booking-details">
+                    <div class="transport-list">
+                        <div class="transport-item">
+                            <strong>Airport Transfers:</strong> Private car service<br>
+                            <small>All airports covered</small>
+                        </div>
+                        <div class="transport-item">
+                            <strong>Bangkok-Phuket:</strong> Domestic flight<br>
+                            <small>March 18 | 1h 30m</small>
+                        </div>
+                        <div class="transport-item">
+                            <strong>Phuket-Ho Chi Minh:</strong> Direct flight<br>
+                            <small>March 22 | 1h 45m</small>
+                        </div>
+                        <div class="transport-item">
+                            <strong>Ho Chi Minh-Hanoi:</strong> Domestic flight<br>
+                            <small>March 26 | 2h 15m</small>
+                        </div>
+                    </div>
+                </div>
+                <button class="action-btn">View Itinerary</button>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <h3>🚀 Quick Actions</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                <button class="quick-action-btn" onclick="addBooking('flight')">+ Add Flight</button>
+                <button class="quick-action-btn" onclick="addBooking('hotel')">+ Add Hotel</button>
+                <button class="quick-action-btn" onclick="addBooking('activity')">+ Add Activity</button>
+                <button class="quick-action-btn" onclick="addBooking('transport')">+ Add Transport</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .bookings-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .bookings-section h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .bookings-section > p {
+            color: #6c757d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .booking-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .booking-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        
+        .booking-header h3 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+        
+        .status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status.confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.partial {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .booking-details {
+            margin-bottom: 15px;
+        }
+        
+        .flight-info, .hotel-item, .activity-item, .transport-item {
+            margin-bottom: 12px;
+            padding: 8px 0;
+        }
+        
+        .flight-info {
+            border-left: 4px solid #007bff;
+            padding-left: 12px;
+        }
+        
+        .hotel-item {
+            border-left: 4px solid #28a745;
+            padding-left: 12px;
+        }
+        
+        .activity-item {
+            border-left: 4px solid #ffc107;
+            padding-left: 12px;
+        }
+        
+        .activity-item.confirmed {
+            border-left-color: #28a745;
+        }
+        
+        .transport-item {
+            border-left: 4px solid #6f42c1;
+            padding-left: 12px;
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .quick-action-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            color: #495057;
+        }
+        
+        .quick-action-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+        
+        small {
+            color: #6c757d;
+            font-size: 13px;
+        }
+        
+        strong {
+            color: #2c3e50;
+        }
+        
+        @media (max-width: 768px) {
+            .bookings-section {
+                padding: 20px;
+            }
+            
+            .booking-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .status {
+                align-self: flex-end;
+            }
+        }
+    </style>
+
+    <script>
+        function addBooking(type) {
+            const messages = {
+                flight: 'Opening flight booking form...',
+                hotel: 'Opening hotel booking form...',
+                activity: 'Opening activity booking form...',
+                transport: 'Opening transport booking form...'
+            };
+            
+            alert(messages[type] || 'Opening booking form...');
+            
+            // In a real application, this would open a modal or navigate to a booking form
+            console.log(`Adding new ${type} booking`);
+        }
+        
+        // Add some interactivity to the booking cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const actionButtons = document.querySelectorAll('.action-btn');
+            
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const cardType = this.closest('.booking-card').querySelector('h3').textContent;
+                    console.log(`Clicked action for: ${cardType}`);
+                    
+                    // Add a subtle animation
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

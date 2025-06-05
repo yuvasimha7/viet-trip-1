@@ -1,0 +1,138 @@
+<div class="search-section">
+    <h2>🔍 Discover & Search</h2>
+    <p>Find amazing places, activities, and experiences for your Thailand-Vietnam adventure!</p>
+    
+    <div style="margin: 20px 0;">
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <input type="text" id="search-input" placeholder="Search for places, activities, food..." 
+                   style="flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+            <button onclick="performSearch()" 
+                    style="padding: 12px 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                Search
+            </button>
+        </div>
+        
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="filter-btn" onclick="filterSearch('attractions')">🏛️ Attractions</button>
+            <button class="filter-btn" onclick="filterSearch('food')">🍜 Food</button>
+            <button class="filter-btn" onclick="filterSearch('beaches')">🏖️ Beaches</button>
+            <button class="filter-btn" onclick="filterSearch('temples')">⛩️ Temples</button>
+            <button class="filter-btn" onclick="filterSearch('activities')">🎯 Activities</button>
+        </div>
+    </div>
+    
+    <style>
+        .filter-btn {
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .search-result {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .search-result h4 {
+            margin: 0 0 8px 0;
+            color: #333;
+        }
+        .search-result p {
+            margin: 0 0 8px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .search-result .tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+    </style>
+    
+    <div id="search-results">
+        <h3>🌟 Popular Destinations</h3>
+        
+        <div class="search-result">
+            <h4>🏝️ Phi Phi Islands, Thailand</h4>
+            <p>Stunning limestone cliffs, crystal-clear waters, and vibrant marine life. Perfect for snorkeling and beach relaxation.</p>
+            <div class="tags">
+                <span class="tag">Beaches</span>
+                <span class="tag">Snorkeling</span>
+                <span class="tag">Island Hopping</span>
+            </div>
+        </div>
+        
+        <div class="search-result">
+            <h4>🏛️ Angkor Wat, Cambodia (Day Trip)</h4>
+            <p>Ancient temple complex and UNESCO World Heritage site. Magnificent architecture and rich history.</p>
+            <div class="tags">
+                <span class="tag">Temples</span>
+                <span class="tag">History</span>
+                <span class="tag">UNESCO</span>
+            </div>
+        </div>
+        
+        <div class="search-result">
+            <h4>🍜 Ho Chi Minh Street Food Tour</h4>
+            <p>Experience authentic Vietnamese cuisine with local guides. Try pho, banh mi, and fresh spring rolls.</p>
+            <div class="tags">
+                <span class="tag">Food</span>
+                <span class="tag">Street Food</span>
+                <span class="tag">Local Experience</span>
+            </div>
+        </div>
+        
+        <div class="search-result">
+            <h4>🏞️ Ha Long Bay Cruise</h4>
+            <p>Breathtaking limestone karsts and emerald waters. Overnight cruise with traditional junk boats.</p>
+            <div class="tags">
+                <span class="tag">Nature</span>
+                <span class="tag">Cruise</span>
+                <span class="tag">UNESCO</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function performSearch() {
+            const query = document.getElementById('search-input').value.trim();
+            if (query) {
+                alert(`Searching for: "${query}"\nThis would integrate with travel APIs for real results!`);
+            }
+        }
+        
+        function filterSearch(category) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            alert(`Filtering by: ${category}\nThis would show results for ${category} category!`);
+        }
+        
+        // Allow Enter key to search
+        document.getElementById('search-input')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+</div>

@@ -28,3 +28,8 @@
 - added sublocations within the green circles. reduced the size of bangkok circle and added information to bangkok location
 - future release would include breakup of locations in modular parts (more of code) and adding feature to remainig green circles and taking feedback whether to add information on map directly or from interactive box
 ---
+
+# ver 1.2.0
+-  release date 2025-06-06
+- huge changes - added the information box on left, made expandable map box, and revamped the look of the app
+- future release would be editing of about, search tool bar

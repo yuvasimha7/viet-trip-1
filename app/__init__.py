@@ -10,7 +10,11 @@ from .suggestions import suggestions_bp  # Import suggestions blueprint
 migrate = Migrate()
 
 def create_app():
-    app = Flask(__name__, template_folder=os.path.abspath("templates"))
+    #app = Flask(__name__, template_folder=os.path.abspath("templates"))
+    app = Flask(__name__, 
+             template_folder=os.path.abspath("templates"), 
+             static_folder=os.path.abspath("static"))
+
 
     # PostgreSQL configuration from environment variable (Railway will provide DATABASE_URL)
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
