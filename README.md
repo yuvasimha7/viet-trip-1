@@ -33,3 +33,4 @@
 -  release date 2025-06-06
 - huge changes - added the information box on left, made expandable map box, and revamped the look of the app
 - future release would be editing of about, search tool bar
+---
